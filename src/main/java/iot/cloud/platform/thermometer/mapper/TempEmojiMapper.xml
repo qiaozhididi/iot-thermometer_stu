@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="iot.cloud.platform.thermometer.mapper.TempEmojiMapper">
+    <select id="getFaceByTemp" resultType="string">
+        <!-- 根据温度获取 Emoji表情的 face。请完善SQL语句 -->
+        <![CDATA[  ]]>
+    </select>
+</mapper>

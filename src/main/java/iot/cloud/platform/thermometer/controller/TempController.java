@@ -1,0 +1,78 @@
+package iot.cloud.platform.thermometer.controller;
+
+import iot.cloud.platform.thermometer.config.Const;
+import iot.cloud.platform.thermometer.service.ConfigService;
+import iot.cloud.platform.thermometer.service.HttpService;
+import iot.cloud.platform.thermometer.service.TempEmojiService;
+import iot.cloud.platform.thermometer.vo.DeviceMsgVo;
+import iot.cloud.platform.thermometer.vo.ResMsg;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@Controller
+public class TempController {
+
+  private HttpService httpService=HttpService.RETROFIT.create(HttpService.class);
+
+  @Autowired
+  private ConfigService configService;
+
+  @Autowired
+  private TempEmojiService tempEmojiServiceImpl;
+
+  /**
+   * 展示温度和表情
+   * @param temp 温度
+   * @return
+   */
+  @RequestMapping("/showTempEmoji")
+  @ResponseBody
+  public ResMsg showTempEmoji(@RequestParam("temp") String temp){
+    ResMsg result=new ResMsg();
+    boolean isValidInt=false;
+    if(NumberUtils.isNumber(temp)){
+      Integer itemp=null;
+      try {
+        itemp = Integer.valueOf(temp);
+        isValidInt=true;
+      }catch(NumberFormatException e){
+      }
+      if(isValidInt){ //如果温度的值是合法的
+        //TODO:请修改完善这里的代码，获取温度和表情。
+      }
+    }
+    return result;
+  }
+
+  /**
+   * 发送设备消息到物联网云平台并保存
+   * @param temp 当前温度
+   * @return
+   */
+  @RequestMapping("/sendDeviceMsg")
+  @ResponseBody
+  public ResMsg sendDeviceMsg(@RequestParam("temp") String temp){
+    ResMsg result=new ResMsg();
+    Map<String,Object> map=new HashMap<>();
+    map.put("temp",Integer.valueOf(temp));
+    map.put("time",new Date());
+    DeviceMsgVo msg=new DeviceMsgVo();
+    msg.setMsg(map);
+    msg.setTag("temp");
+    String iotId=configService.getV(Const.CONFIG_K_IOTID);
+    String devSecret=configService.getV(Const.CONFIG_K_DEVSECRET);
+    //TODO:物联网云平台ID和设备密钥不能为空
+    //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
+    //返回保存消息结果。
+    return result;
+  }
+
+}
