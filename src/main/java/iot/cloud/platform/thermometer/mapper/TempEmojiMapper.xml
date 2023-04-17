@@ -3,6 +3,17 @@
 <mapper namespace="iot.cloud.platform.thermometer.mapper.TempEmojiMapper">
     <select id="getFaceByTemp" resultType="string">
         <!-- 根据温度获取 Emoji表情的 face。请完善SQL语句 -->
-        <![CDATA[  ]]>
+        select face from emoji where name in (
+            select emoji_name from tempemoji t
+                where (mint &lt;=#{temp} or mint is null)
+                  and (maxt &gt; #{temp} or maxt is null)
+        )
+
+        <!--        <![CDATA[ select face from emoji where name in (-->
+        <!--	                select emoji_name from tempemoji t-->
+        <!--	                    where (mint <=100 or mint is null)-->
+        <!--	                      and (maxt > 100 or maxt is null)-->
+        <!--                            )-->
+        <!--            ]]>-->
     </select>
 </mapper>

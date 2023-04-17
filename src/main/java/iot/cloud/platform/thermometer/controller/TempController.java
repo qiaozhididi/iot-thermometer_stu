@@ -20,59 +20,68 @@ import java.util.Map;
 @Controller
 public class TempController {
 
-  private HttpService httpService=HttpService.RETROFIT.create(HttpService.class);
+    private HttpService httpService = HttpService.RETROFIT.create(HttpService.class);
 
-  @Autowired
-  private ConfigService configService;
+    @Autowired
+    private ConfigService configService;
 
-  @Autowired
-  private TempEmojiService tempEmojiServiceImpl;
+    @Autowired
+    private TempEmojiService tempEmojiServiceImpl;
 
-  /**
-   * 展示温度和表情
-   * @param temp 温度
-   * @return
-   */
-  @RequestMapping("/showTempEmoji")
-  @ResponseBody
-  public ResMsg showTempEmoji(@RequestParam("temp") String temp){
-    ResMsg result=new ResMsg();
-    boolean isValidInt=false;
-    if(NumberUtils.isNumber(temp)){
-      Integer itemp=null;
-      try {
-        itemp = Integer.valueOf(temp);
-        isValidInt=true;
-      }catch(NumberFormatException e){
-      }
-      if(isValidInt){ //如果温度的值是合法的
-        //TODO:请修改完善这里的代码，获取温度和表情。
-      }
+    /**
+     * 展示温度和表情
+     *
+     * @param temp 温度
+     * @return
+     */
+    @RequestMapping("/showTempEmoji")
+    @ResponseBody
+    public ResMsg showTempEmoji(@RequestParam("temp") String temp) {
+        ResMsg result = new ResMsg();
+        boolean isValidInt = false;
+        if (NumberUtils.isNumber(temp)) {
+            Integer itemp = null;
+            try {
+                itemp = Integer.valueOf(temp);
+                isValidInt = true;
+            } catch (NumberFormatException e) {
+            }
+            if (isValidInt) { //如果温度的值是合法的
+                //TODO:请修改完善这里的代码，获取温度和表情。
+                //调用TempEmojiService.getFaceByTemp方法，获取温度和表情。
+                //返回温度和表情。
+                result.setData(tempEmojiServiceImpl.getFaceByTemp(itemp));
+                result.setErrmsg(tempEmojiServiceImpl.getFaceByTemp(itemp));
+                System.out.println(tempEmojiServiceImpl.getFaceByTemp(itemp));
+            } else {
+                result.setErrmsg("温度值不合法");
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  /**
-   * 发送设备消息到物联网云平台并保存
-   * @param temp 当前温度
-   * @return
-   */
-  @RequestMapping("/sendDeviceMsg")
-  @ResponseBody
-  public ResMsg sendDeviceMsg(@RequestParam("temp") String temp){
-    ResMsg result=new ResMsg();
-    Map<String,Object> map=new HashMap<>();
-    map.put("temp",Integer.valueOf(temp));
-    map.put("time",new Date());
-    DeviceMsgVo msg=new DeviceMsgVo();
-    msg.setMsg(map);
-    msg.setTag("temp");
-    String iotId=configService.getV(Const.CONFIG_K_IOTID);
-    String devSecret=configService.getV(Const.CONFIG_K_DEVSECRET);
-    //TODO:物联网云平台ID和设备密钥不能为空
-    //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
-    //返回保存消息结果。
-    return result;
-  }
+    /**
+     * 发送设备消息到物联网云平台并保存
+     *
+     * @param temp 当前温度
+     * @return
+     */
+    @RequestMapping("/sendDeviceMsg")
+    @ResponseBody
+    public ResMsg sendDeviceMsg(@RequestParam("temp") String temp) {
+        ResMsg result = new ResMsg();
+        Map<String, Object> map = new HashMap<>();
+        map.put("temp", Integer.valueOf(temp));
+        map.put("time", new Date());
+        DeviceMsgVo msg = new DeviceMsgVo();
+        msg.setMsg(map);
+        msg.setTag("temp");
+        String iotId = configService.getV(Const.CONFIG_K_IOTID);
+        String devSecret = configService.getV(Const.CONFIG_K_DEVSECRET);
+        //TODO:物联网云平台ID和设备密钥不能为空
+        //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
+        //返回保存消息结果。
+        return result;
+    }
 
 }
