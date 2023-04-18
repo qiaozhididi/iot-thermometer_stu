@@ -5,7 +5,6 @@ import java.util.Map;
 public class DeviceMsgVo {
   private String iotId;
   private String tag;
-
   private Object msg;
 
   public String getIotId() {

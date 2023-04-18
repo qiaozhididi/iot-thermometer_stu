@@ -7,12 +7,15 @@ import iot.cloud.platform.thermometer.service.TempEmojiService;
 import iot.cloud.platform.thermometer.vo.DeviceMsgVo;
 import iot.cloud.platform.thermometer.vo.ResMsg;
 import iot.cloud.platform.thermometer.vo.TempEmojiVo;
+import jdk.nashorn.internal.codegen.CompilerConstants;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -84,11 +87,24 @@ public class TempController {
         String iotId = configService.getV(Const.CONFIG_K_IOTID);
         String devSecret = configService.getV(Const.CONFIG_K_DEVSECRET);
         //TODO:物联网云平台ID和设备密钥不能为空
-        //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
-        //返回保存消息结果
-        httpService.sendDeviceMsg(iotId, devSecret, msg);
-        result.setErrcode("0");
-        result.setErrmsg("保存消息成功");
+        if (iotId != null && devSecret != null) {
+            //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
+            //返回保存消息结果
+            Call<ResMsg> call = httpService.sendDeviceMsg(iotId, devSecret, msg);
+            try {
+                Response<ResMsg> response = call.execute();
+                if (response.isSuccessful()) {
+                    result.setErrcode("0");
+                    result.setErrmsg("发送消息成功");
+                } else {
+                    result.setErrmsg("发送消息失败");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            result.setErrmsg("IotId和设备密钥不能为空");
+        }
         return result;
     }
 
