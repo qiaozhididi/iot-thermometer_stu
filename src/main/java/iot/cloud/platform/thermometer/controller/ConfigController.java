@@ -159,7 +159,14 @@ public class ConfigController {
                             String devSecret = dataMap.get("devSecret").toString();
                             registerMap.put(Const.CONFIG_K_IOTID, iotId);
                             registerMap.put(Const.CONFIG_K_DEVSECRET, devSecret);
+                            //MQTT主题配置
+                            registerMap.put(Const.CONFIG_K_DEVTOPICPOST, "/iot/cloud/" + iotId + "/post");
+                            registerMap.put(Const.CONFIG_K_DEVTOPICPOSTREPLY, "/iot/cloud/" + iotId + "/post_reply");
+                            registerMap.put(Const.CONFIG_K_DEVTOPICRECEIVE, "/iot/cloud/" + iotId + "/receive");
+                            registerMap.put(Const.CONFIG_K_DEVTOPICRECEIVEREPLY, "/iot/cloud/" + iotId + "/receive_reply");
+                            //通过saveConfigs接口保存到数据库
                             configService.saveConfigs(registerMap);
+                            resMsg.setData(registerMap);
                         }
                         return resMsg;
                     }

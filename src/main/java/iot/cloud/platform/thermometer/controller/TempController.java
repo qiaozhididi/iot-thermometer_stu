@@ -85,7 +85,10 @@ public class TempController {
         String devSecret = configService.getV(Const.CONFIG_K_DEVSECRET);
         //TODO:物联网云平台ID和设备密钥不能为空
         //调用发送设备消息的开放API(HttpService.sendDeviceMsg)，保存设备消息到物联网云平台
-        //返回保存消息结果。
+        //返回保存消息结果
+        httpService.sendDeviceMsg(iotId, devSecret, msg);
+        result.setErrcode("0");
+        result.setErrmsg("保存消息成功");
         return result;
     }
 
