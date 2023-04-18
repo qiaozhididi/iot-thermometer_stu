@@ -101,8 +101,8 @@ public class ConfigController {
                             Map<String, String> configMap = new HashMap<>();
                             configMap.put(Const.CONFIG_K_USERID, userId);
                             configMap.put(Const.CONFIG_K_USERSECRET, userSecret);
-                            Map<String, String> tokenMap = (Map<String, String>) resMsg.getData();
-                            String token = tokenMap.get("token");
+                            Map tokenMap = (Map) resMsg.getData();
+                            String token = tokenMap.get("token").toString();
                             configMap.put(Const.CONFIG_K_TOKEN, token);
                             configService.saveConfigs(configMap);
                         }
