@@ -1,7 +1,19 @@
-# iot-thermometer
+# 物联网云平台设计与开发实训
+
+<div style="text-align: center">最近一次更新：2023年4月17日</div>
 
 #### 介绍
-《物联网云平台设计与开发实训》设备端代码
+####iot-thermometer设备端代码
+
+改项目代码为表情温度计模拟设备端代码，会与物联网云平台进行交互，实现以下功能：
+<ol>
+<li>表情温度计温度更新功能</li>
+<li>待更新...</li>
+<li>待更新...</li>
+<li>待更新...</li>
+</ol>
+
+如需查看云平台代码请跳转：https://gitee.com/qiaozhididi/iot-cloud_stu
 
 #### 软件架构
 使用了一下框架

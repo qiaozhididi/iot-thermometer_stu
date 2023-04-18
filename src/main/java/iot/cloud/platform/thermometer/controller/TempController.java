@@ -6,6 +6,7 @@ import iot.cloud.platform.thermometer.service.HttpService;
 import iot.cloud.platform.thermometer.service.TempEmojiService;
 import iot.cloud.platform.thermometer.vo.DeviceMsgVo;
 import iot.cloud.platform.thermometer.vo.ResMsg;
+import iot.cloud.platform.thermometer.vo.TempEmojiVo;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,9 +51,13 @@ public class TempController {
                 //TODO:请修改完善这里的代码，获取温度和表情。
                 //调用TempEmojiService.getFaceByTemp方法，获取温度和表情。
                 //返回温度和表情。
-                result.setData(tempEmojiServiceImpl.getFaceByTemp(itemp));
-                result.setErrmsg(tempEmojiServiceImpl.getFaceByTemp(itemp));
-                System.out.println(tempEmojiServiceImpl.getFaceByTemp(itemp));
+                result.setErrcode("0");
+                result.setErrmsg("更新温度成功");
+                String face = tempEmojiServiceImpl.getFaceByTemp(itemp);
+                TempEmojiVo tempEmojiVo = new TempEmojiVo();
+                tempEmojiVo.setTemp(itemp);
+                tempEmojiVo.setEmoji(face);
+                result.setData(tempEmojiVo);
             } else {
                 result.setErrmsg("温度值不合法");
             }
