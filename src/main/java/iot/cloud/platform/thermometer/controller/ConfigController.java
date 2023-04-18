@@ -142,6 +142,27 @@ public class ConfigController {
             vo.setDevName(devName);
             vo.setDevType(devType);
             //TODO:完善调用注册设备API，获取设备物联网云平台ID和设备密钥，并保存到配置表。
+            Call<ResMsg> call = httpService.registerDevice(token, vo);
+            try {
+                Response<ResMsg> response = call.execute();
+                if (response.isSuccessful()) {
+                    ResMsg resMsg = response.body();
+                    if (resMsg != null) {
+                        if ("0".equals(resMsg.getErrcode())) {
+                            Map<String, String> registerMap = new HashMap<>();
+                            registerMap.put(Const.CONFIG_K_DEVNAME, devName);
+                            registerMap.put(Const.CONFIG_K_DEVTYPE, devType);
+                            registerMap.put(Const.CONFIG_K_DESCRIPTION, description);
+                            registerMap.put(Const.CONFIG_K_TOKEN, token);
+                            configService.saveConfigs(registerMap);
+                        }
+                        return resMsg;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
         return result;
     }
