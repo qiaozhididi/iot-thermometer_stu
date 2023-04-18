@@ -1,6 +1,6 @@
 # 物联网云平台设计与开发实训
 
-<div style="text-align: center">最近一次更新：2023年4月17日</div>
+<div style="text-align: center">最近一次更新：2023年4月18日</div>
 
 #### 介绍
 ####iot-thermometer设备端代码
