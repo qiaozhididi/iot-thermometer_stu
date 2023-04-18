@@ -3,6 +3,6 @@
 <mapper namespace="iot.cloud.platform.thermometer.mapper.EmojiMapper">
     <update id="updateEmojiFace">
         <!-- 完善SQL -->
-        select * from emoji where id = #{id}
+       update emoji set face = #{face} where name = #{name}
     </update>
 </mapper>

@@ -3,7 +3,8 @@
 <div style="text-align: center">最近一次更新：2023年4月18日</div>
 
 #### 介绍
-####iot-thermometer设备端代码
+
+#### iot-thermometer设备端代码
 
 项目文档：https://heis.gitee.io/docs/iot-cloud-training/iot-cloud-training-02/
 
@@ -13,13 +14,15 @@
 <li>实验2.2 - 完成表情温度计温度更新功能</li>
 <li>实验3.3 - 设备端实现调用物联网云平台API获取用户令牌</li>
 <li>实验4.2 - 表情温度计项目调用开放API实现注册设备</li>
-<li>待更新...</li>
+<li>实验5.1 - 表情温度计项目新增 MQTT 调用接口——修改表情</li>
 </ol>
 
 如需查看云平台代码请跳转：https://gitee.com/qiaozhididi/iot-cloud_stu
 
 #### 软件架构
+
 使用了一下框架
+
 - SpringBoot
 - MyBatis
 - Flyway
@@ -41,9 +44,19 @@
 3. 【配置页】__注册设备功能__，根据物联网云平台的API，实现设备注册功能，获得设备的物联网云平台ID和设备密钥。
 4. 【首页】__发送温度消息功能__ 的温度和时间到物联网云平台进行保存。
 5. 【MQTT客户端】__通过MQTT消息修改表情的功能__ ，通过向主题`/iot/cloud/thermometer001/receive`发送类似以下的消息
+
 ```json
-{"eventId":"0759","eventName":"updateEmojiFace","eventTime":1647155485187,"params":["burn","_(´□`」 ∠)_"]}
+{
+  "eventId": "0759",
+  "eventName": "updateEmojiFace",
+  "eventTime": 1647155485187,
+  "params": [
+    "burn",
+    "_(´□`」 ∠)_"
+  ]
+}
 ```
+
 实现对应表情的更新，并且向主题`/iot/cloud/thermometer001/receive_reply`回复是否更新成功的回复消息。
 
 注意修改`pom.xml`和`application.yml`中的数据库连接端口。（本人使用的3308）

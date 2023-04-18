@@ -33,31 +33,32 @@ public class MqttConsumerCallback implements MqttCallbackExtended {
 
     @Autowired
     @Qualifier("mqttSubTopics")
-    private Map<String,Integer> mqttSubTopics;
+    private Map<String, Integer> mqttSubTopics;
 
     @Autowired
     @Qualifier("mqttTopicReplyMap")
-    private Map<String,String> mqttTopicReplyMap;
+    private Map<String, String> mqttTopicReplyMap;
 
     @Autowired
     private EmojiController emojiController;
+
     /**
      * 断开重连
      */
     @Override
     public void connectionLost(Throwable cause) {
-        log.info("MQTT连接断开",cause);
-        int tryTimes=3,count=0;
-        while(!client.isConnected()) {
+        log.info("MQTT连接断开", cause);
+        int tryTimes = 3, count = 0;
+        while (!client.isConnected()) {
             try {
                 client.reconnect();
-                count=0;
+                count = 0;
             } catch (Exception e) {
                 count++;
                 log.error(ExcptUtil.filterStack(e));
             }
-            log.info("尝试重新连接"+count+"次");
-            if(count>=tryTimes){
+            log.info("尝试重新连接" + count + "次");
+            if (count >= tryTimes) {
                 break;
             }
         }
@@ -72,8 +73,8 @@ public class MqttConsumerCallback implements MqttCallbackExtended {
         try {
             String msg = new String(message.getPayload());
             log.info("收到主题[" + topic + "]消息 ->" + msg);
-            ObjectMapper objMapper=new ObjectMapper();
-            MqttMsg<HashMap> resvMsg=null;
+            ObjectMapper objMapper = new ObjectMapper();
+            MqttMsg<HashMap> resvMsg = null;
             try {
                 //ObjectMapper 是 Jackson包用于解析 Json 为java 对象
                 resvMsg = objMapper.readValue(msg, MqttMsg.class);
@@ -81,27 +82,33 @@ public class MqttConsumerCallback implements MqttCallbackExtended {
                 log.error(ExcptUtil.filterStack(e));
             }
 
-            HashMap data=resvMsg.getData();
-            ResMsg returnVal=null;
+            HashMap data = resvMsg.getData();
+            ResMsg returnVal = null;
 
             //TODO:完成此处代码实现更新表情
+            EmojiEntity emojiEntity = new EmojiEntity();
+            emojiEntity.setName((String) data.get("name"));
+            emojiEntity.setFace((String) data.get("face"));
+            returnVal = emojiController.updateEmojiFace(emojiEntity);
+
+
             //回复消息
-            MqttMsg<ResMsg> replyMsg=new MqttMsg();
+            MqttMsg<ResMsg> replyMsg = new MqttMsg();
             replyMsg.setEventId(resvMsg.getEventId());
             replyMsg.setEventName(resvMsg.getEventName());
             replyMsg.setEventTime(resvMsg.getEventTime());
             replyMsg.setData(returnVal);
-            String receiveReplyMsg="{}";
+            String receiveReplyMsg = "{}";
             try {
                 //把replyMsg对象转换为 JSON 消息
-                receiveReplyMsg=objMapper.writeValueAsString(replyMsg);
-                log.info("回复MQTT消息："+receiveReplyMsg);
+                receiveReplyMsg = objMapper.writeValueAsString(replyMsg);
+                log.info("回复MQTT消息：" + receiveReplyMsg);
             } catch (JsonProcessingException e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             }
-            String sendTopic=mqttTopicReplyMap.get(topic);
-            if(StringUtils.isNotBlank(sendTopic)) {
-                log.info("send topic :{} -> {}", sendTopic,receiveReplyMsg);
+            String sendTopic = mqttTopicReplyMap.get(topic);
+            if (StringUtils.isNotBlank(sendTopic)) {
+                log.info("send topic :{} -> {}", sendTopic, receiveReplyMsg);
                 client.publish(sendTopic, new MqttMessage(receiveReplyMsg.getBytes(StandardCharsets.UTF_8)));
             }
         } catch (Exception e) {
@@ -116,10 +123,10 @@ public class MqttConsumerCallback implements MqttCallbackExtended {
 
     @Override
     public void connectComplete(boolean b, String s) {
-        mqttSubTopics.forEach((k,v) ->{
+        mqttSubTopics.forEach((k, v) -> {
             try {
-                client.subscribe(k,v);
-                log.info("订阅主题:"+k);
+                client.subscribe(k, v);
+                log.info("订阅主题:" + k);
             } catch (MqttException e) {
                 log.error(ExcptUtil.filterStack(e));
             }
