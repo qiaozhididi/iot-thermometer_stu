@@ -5,10 +5,13 @@
 #### 介绍
 ####iot-thermometer设备端代码
 
-改项目代码为表情温度计模拟设备端代码，会与物联网云平台进行交互，实现以下功能：
+项目文档：https://heis.gitee.io/docs/iot-cloud-training/iot-cloud-training-02/
+
+该项目与物联网云平台进行交互，实现以下功能：
 <ol>
-<li>表情温度计温度更新功能</li>
-<li>待更新...</li>
+<li>实验2.1 - 构建设备端项目表情温度计</li>
+<li>实验2.2 - 完成表情温度计温度更新功能</li>
+<li>实验3.3 - 设备端实现调用物联网云平台API获取用户令牌</li>
 <li>待更新...</li>
 <li>待更新...</li>
 </ol>
@@ -42,3 +45,5 @@
 {"eventId":"0759","eventName":"updateEmojiFace","eventTime":1647155485187,"params":["burn","_(´□`」 ∠)_"]}
 ```
 实现对应表情的更新，并且向主题`/iot/cloud/thermometer001/receive_reply`回复是否更新成功的回复消息。
+
+注意修改`pom.xml`和`application.yml`中的数据库连接端口。（本人使用的3308）
