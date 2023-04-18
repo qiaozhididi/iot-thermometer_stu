@@ -154,6 +154,11 @@ public class ConfigController {
                             registerMap.put(Const.CONFIG_K_DEVTYPE, devType);
                             registerMap.put(Const.CONFIG_K_DESCRIPTION, description);
                             registerMap.put(Const.CONFIG_K_TOKEN, token);
+                            Map dataMap = (Map) resMsg.getData();
+                            String iotId = dataMap.get("iotId").toString();
+                            String devSecret = dataMap.get("devSecret").toString();
+                            registerMap.put(Const.CONFIG_K_IOTID, iotId);
+                            registerMap.put(Const.CONFIG_K_DEVSECRET, devSecret);
                             configService.saveConfigs(registerMap);
                         }
                         return resMsg;
